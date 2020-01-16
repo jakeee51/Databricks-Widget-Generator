@@ -1,6 +1,16 @@
+# -*- coding: utf-8 -*-
+'''
+Author: David J. Morfe
+Application Name: Databricks Widget Code Generator
+Functionality Purpose: A code generator for the Databricks platform that searches for function parameters and their properties
+Version: Beta 0.0.2
+'''
+#1/16/20
+
 import re
 import os
 import sys
+import site
 
 '''
 OUTPUT TEMPLATE:
@@ -9,11 +19,13 @@ dbutils.widgets.dropdown("parse", "address", ["address", "street", "number"])
 parse = dbutils.widgets.get("parse")
 '''
 
-site_packages_path = r"C:\Users\wmorfed\AppData\Local\Programs\Python\Python37\Lib\site-packages" # Change path here!
+for i in site.getsitepackages():
+    if "site-packages" in i:
+        site_packages_path = i
 LIBRARY_NAME = ''; FUNCTION_NAME = ''; RET = {}
 try:
-    LIBRARY_NAME = "lxml" # sys.argv[1]
-    FUNCTION_NAME = "html_annotate" # sys.argv[2]
+    LIBRARY_NAME = "GeoLiberator"     # sys.argv[1]
+    FUNCTION_NAME = "autoGeoLiberate"  # sys.argv[2]
 except IndexError:
     print("Error, run from cli!\n\t(ex: `python param_finder.py pandas read_excel`)")
 
@@ -44,8 +56,8 @@ def build_dict(params): # Populate 'ret' dictionary to be returned
 
 def recur_search(path, func): # If function found call build_dict() & return module path; If function not found in cwd return None
     for pyFile in os.listdir():
-        if re.search(r".py$", pyFile):
-            with open(pyFile, 'r') as pf:
+        if re.search(r"\.py$", pyFile):
+            with open(pyFile, 'r', encoding="utf8") as pf:
                 for line in pf.readlines():
                     if re.search(fr"^def {func}\(", line): # KEY FEATURE: Check if function exists
                         if re.search(r"\(.*\)", line):
