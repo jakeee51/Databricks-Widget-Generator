@@ -42,7 +42,7 @@ def build_dict(params): # Populate 'ret' dictionary to be returned
             else:
                 RET[p_name.group()] = None
 
-def search_cwd(path, func): # If function found call build_dict() & return module path; If function not found in cwd return None
+def recur_search(path, func): # If function found call build_dict() & return module path; If function not found in cwd return None
     for pyFile in os.listdir():
         if re.search(r".py$", pyFile):
             with open(pyFile, 'r') as pf:
@@ -54,11 +54,10 @@ def search_cwd(path, func): # If function found call build_dict() & return modul
                             return path + '/' + pyFile
     for folder in get_folders(os.listdir()):
         os.chdir(folder)
-        search_cwd(path + '/' + folder, func)
+        mod = recur_search(path + '/' + folder, func)
         os.chdir("..")
-
-def recur_find(path, func): # Return relavent module path
-    return search_cwd(path, func)
+        if mod != None:
+            return mod
 
 def feof(module):
     with open(module, 'r') as f:
@@ -83,8 +82,8 @@ def main(pckg, func):
     LS = os.listdir(site_packages_path); line_marks = 0
     if pckg in LS:
         os.chdir(site_packages_path + '/' + pckg)
-        module = recur_find(site_packages_path, func)
-        print(module)
+        module = recur_search(site_packages_path + '/' + pckg, func)
+        print("Module path: ", module)
         if module != None:
             line_marks = feof(module)
 
