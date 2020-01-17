@@ -27,7 +27,7 @@ try:
     LIBRARY_NAME = "GeoLiberator"     # sys.argv[1]
     FUNCTION_NAME = "autoGeoLiberate"  # sys.argv[2]
 except IndexError:
-    print("Error, run from cli!\n\t(ex: `python param_finder.py pandas read_excel`)")
+    print("Error, run from cli!\n\t(ex: `python dbwidgets_generator.py time sleep`)")
 
 def comp(param: str, wType: int) -> list:
     if RET[param]['default_value'] != '':
