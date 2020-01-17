@@ -19,15 +19,23 @@ dbutils.widgets.dropdown("parse", "address", ["address", "street", "number"])
 parse = dbutils.widgets.get("parse")
 '''
 
-for i in site.getsitepackages():
-    if "site-packages" in i:
-        site_packages_path = i
+try:
+    for i in site.getsitepackages():
+        if "site-packages" in i:
+            site_packages_path = i
+except AttributeError:
+    site_packages_path = "/databricks/python3/lib/python3.7/site-packages"
 LIBRARY_NAME = ''; FUNCTION_NAME = ''; RET = {}; template = []
 try:
-    LIBRARY_NAME = "GeoLiberator"     # sys.argv[1]
-    FUNCTION_NAME = "autoGeoLiberate"  # sys.argv[2]
+    LIBRARY_NAME = sys.argv[1]
+    FUNCTION_NAME = sys.argv[2]
 except IndexError:
-    print("Error, run from cli!\n\t(ex: `python dbwidgets_generator.py time sleep`)")
+    print("Error, run from cli or change the widget values 'LIBRARY_NAME' & 'FUNCTION_NAME' at the top!\n\t(ex: `python dbwidgets_generator.py time sleep`)")
+    dbutils.widgets.text('LIBRARY_NAME', '')
+    file_path = dbutils.widgets.get('LIBRARY_NAME')
+    dbutils.widgets.text('FUNCTION_NAME', '')
+    address_field = dbutils.widgets.get('FUNCTION_NAME')
+
 
 def comp(param: str, wType: int) -> list:
     if RET[param]['default_value'] != '':
