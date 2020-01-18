@@ -3,9 +3,9 @@
 Author: David J. Morfe
 Application Name: Databricks Widget Code Generator
 Functionality Purpose: A code generator for the Databricks platform that searches for function parameters and their properties
-Version: Beta 0.1.0
+Version: Beta 0.1.1
 '''
-#1/17/20
+#1/18/20
 
 import re
 import os
@@ -80,6 +80,7 @@ def func_grab(pyFile, func): # Parses the function from the code and returns a l
                 return ret
             elif start != -1:
                 ret.append(line.strip('\n'))
+        return ret
 
 def get_folders(lst):
     nlst = []
@@ -152,5 +153,8 @@ def main(pckg, func):
     return lst
 
 if __name__ == "__main__":
+    for line_of_Databricks_code in main(LIBRARY_NAME, FUNCTION_NAME):
+        print(line_of_Databricks_code)
+else:
     for line_of_Databricks_code in main(LIBRARY_NAME, FUNCTION_NAME):
         print(line_of_Databricks_code)
